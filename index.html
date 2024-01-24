@@ -1,10 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>HTML Test</title>
+	<!-- Load plotly.js into the DOM -->
+	<script src='https://cdn.plot.ly/plotly-2.27.0.min.js'></script>
 </head>
+
 <body>
-    <h1>Hello, Github Pages World!</h1>
+<div id="tpspd">
+	<h3 id="tpspd_head">Top Speed Calculation</h3>
+
+	<div>
+		<label for="tpspd_power" >Power [kw]</label>
+		<input id="tpspd_power" type="number" value="100" step="5">
+	</div>
+	<div>
+		<label for="tpspd_cda">Drag Area [m^2]</label>
+		<input id="tpspd_cda" type="number" value="0.5" step="0.05">
+	</div>
+	<div>
+		<h4>Nonsense plot that updates with CdA Change</h4>
+		<label for="tpspd_topspeed">Top Speed [km/h]</label>
+		<input id="tpspd_topspeed" type="number" disabled>
+	</div>
+	<div id='tpspd_plot'><!-- Plotly chart will be drawn inside this DIV --></div>
+	<script src="tpspd.js"></script>
+</div>
 </body>
 </html>
