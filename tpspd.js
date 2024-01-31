@@ -71,7 +71,7 @@ function plotly_graph() {
           }
         };
 
-      Plotly.newPlot('tpspd_plot', data);
+      Plotly.newPlot('tpspd_plot', data, layout);
     })
     .catch((error) => {
       console.error(error)
