@@ -53,7 +53,7 @@ function plotly_graph() {
       console.log(json)
       var speed_trace = {
         x: json["time_s"],
-        y: json["velocity_ms"]*ms2kmh,
+        y: json["velocity_ms"].map(v => v*ms2kmh),
         mode: 'lines+markers',
         type: 'scatter'
       };
