@@ -37,21 +37,30 @@ function calc_topspeed(cda, power) {
 
 /*
   Creates and displays a Plotly graph based on input data.
-
-  TODO: Currently its a nonsense graph!
 */
 function plotly_graph() {
-  var cda = inp_cda.value,
-    pwr = inp_power.value;
-  var trace3 = {
-    x: [0, 1, 2, 3, 4].map(x => pwr/100*x),
-    y: [0, 12, 9, 15, 12].map(x => cda*x),
-    mode: 'lines+markers',
-    type: 'scatter'
-  };
+  var cda_m2 = inp_cda.value,
+    pwr_kw = inp_power.value,
+    mass_kg = 200,
+    data_url = `https://us-central1-axial-camp-412420.cloudfunctions.net/accel-sol?power_kw={pwr_kw}&mass_kg=${mass_kg}&cda_m2=${cda}`;
+  // TODO: Don't hardcode URL, and use authentication
 
-  var data = [trace3];
+  fetch(data_url)
+    .then((response) => response.json())
+    .then((json) => {
+      console.log(json)
+      var speed_trace = {
+        x: json["time_s"],
+        y: json["velocity_ms"],
+        mode: 'lines+markers',
+        type: 'scatter'
+      };
 
-  Plotly.newPlot('tpspd_plot', data);
+      var data = [speed_trace];
+
+      Plotly.newPlot('tpspd_plot', data);
+    })
+    .catch((error) => console.error(error));
+
 }
 
