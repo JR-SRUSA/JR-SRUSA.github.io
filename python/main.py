@@ -38,18 +38,28 @@ def http_accel_sol(request: flask.Request) -> json:
     """
     HTTP GCloud Function.
 
-    Can be requested from the github pages site (CORS headers included)
+    Can be requested from the Github pages site (CORS headers included)
     """
+    print(request.url_root)
+    if request.url_root == 'http://localhost:8123/':
+        # Default to "debug from localhost" mode if the request comes from localhost:8123
+        headers = {"Access-Control-Allow-Origin": "http://localhost:8000"}
+    else:
+        headers = {"Access-Control-Allow-Origin": "https://jr-srusa.github.io"}
+
     # Set CORS headers for the preflight request
     if request.method == "OPTIONS":
         # Allows GET requests from any origin with the Content-Type
         # header and caches preflight response for an 3600s
-        headers = {
-            "Access-Control-Allow-Origin": "https://jr-srusa.github.io",
-            "Access-Control-Allow-Methods": "GET",
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Access-Control-Max-Age": "3600",
-        }
+        # headers = {
+        #     "Access-Control-Allow-Origin": "https://jr-srusa.github.io",
+        #     "Access-Control-Allow-Methods": "GET",
+        #     "Access-Control-Allow-Headers": "Content-Type",
+        #     "Access-Control-Max-Age": "3600",
+        # }
+        headers["Access-Control-Allow-Methods"] = "GET"
+        headers["Access-Control-Allow-Headers"] = "Content-Type"
+        headers["Access-Control-Max-Age"] = "3600"
 
         return ("", 204, headers)
 
@@ -74,7 +84,6 @@ def http_accel_sol(request: flask.Request) -> json:
         'time_s': list(sol.t),
         'velocity_ms': list(sol.y[1]),
     })
-    headers = {"Access-Control-Allow-Origin": "https://jr-srusa.github.io"}
 
     return (json_response, 200, headers)
 

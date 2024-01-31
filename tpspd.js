@@ -60,15 +60,9 @@ function plotly_graph() {
 
       var data = [speed_trace],
         layout = {
-          title: {
-            text: "Acceleration Plot"
-          },
-          xaxis: {
-            text: "Time [s]"
-          },
-          yaxis: {
-            text: "Speed [km/h]"
-          }
+          title: {text: "Acceleration Plot"},
+          xaxis: {title: {text: "Time [s]"}},
+          yaxis: {title: {text: "Speed [km/h]"}},
         };
 
       Plotly.newPlot('tpspd_plot', data, layout);
