@@ -42,7 +42,9 @@ function plotly_graph() {
   var cda_m2 = inp_cda.value,
     pwr_kw = inp_power.value,
     mass_kg = 200,
-    data_url = `https://us-central1-axial-camp-412420.cloudfunctions.net/accel-sol?power_kw={pwr_kw}&mass_kg=${mass_kg}&cda_m2=${cda}`;
+    // api_host = "http://localhost:8123",   // Testing
+    api_host = "https://us-central1-axial-camp-412420.cloudfunctions.net",  // Production
+    data_url = `${api_host}/accel-sol?power_kw=${pwr_kw}&mass_kg=${mass_kg}&cda_m2=${cda_m2}`;
   // TODO: Don't hardcode URL, and use authentication
 
   fetch(data_url)
@@ -60,7 +62,11 @@ function plotly_graph() {
 
       Plotly.newPlot('tpspd_plot', data);
     })
-    .catch((error) => console.error(error));
+    .catch((error) => {
+      console.error(error)
+      console.error(data_url)
+    });
+
 
 }
 

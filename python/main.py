@@ -54,7 +54,7 @@ def http_accel_sol(request: flask.Request) -> json:
             return f"You need to include all parameters to get a result!<br>{EXAMPLE_SPEED_URL}"
 
     sol = tp_spd_sim.solve_accel(accel_params)
-    return json.dumps({
+    return flask.jsonify({
         'time_s': list(sol.t),
         'velocity_ms': list(sol.y[1]),
     })
