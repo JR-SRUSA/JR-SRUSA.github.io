@@ -30,15 +30,29 @@ import tp_spd_sim
 
 
 EXAMPLE_SPEED_URL = "Ex: https:url/accel-graph?power_kw=200&mass_kg=200&cda_m2=0.25"
+EXAMPLE_SPEED_ARGS = "?power_kw=200&mass_kg=200&cda_m2=0.25"
 
 
 @functions_framework.http
 def http_accel_sol(request: flask.Request) -> json:
     """
     HTTP GCloud Function.
-    :param request:
-    :return:
+
+    Can be requested from the github pages site (CORS headers included)
     """
+    # Set CORS headers for the preflight request
+    if request.method == "OPTIONS":
+        # Allows GET requests from any origin with the Content-Type
+        # header and caches preflight response for an 3600s
+        headers = {
+            "Access-Control-Allow-Origin": "https://jr-srusa.github.io",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Max-Age": "3600",
+        }
+
+        return ("", 204, headers)
+
     request_args = request.args
 
     request_arg_keys = ["power_kw", "cda_m2", "mass_kg"]
@@ -49,15 +63,20 @@ def http_accel_sol(request: flask.Request) -> json:
             try:
                 accel_params[arg_key] = float(request_args[arg_key])
             except ValueError:
-                return f"All input parameters must be able to be read as a number. <br><br>{EXAMPLE_SPEED_URL}"
+                example_url = request.base_url + 'accel-sol/' + EXAMPLE_SPEED_ARGS
+                return f"All input parameters must be able to be read as a number. <br><br><a href='{example_url}'>{example_url}</a>"
         else:
-            return f"You need to include all parameters to get a result!<br>{EXAMPLE_SPEED_URL}"
+            example_url = request.base_url + 'accel-sol/' + EXAMPLE_SPEED_ARGS
+            return f"All input parameters must be able to be read as a number. <br><br><a href='{example_url}'>{example_url}</a>"
 
     sol = tp_spd_sim.solve_accel(accel_params)
-    return flask.jsonify({
+    json_response = flask.jsonify({
         'time_s': list(sol.t),
         'velocity_ms': list(sol.y[1]),
     })
+    headers = {"Access-Control-Allow-Origin": "https://jr-srusa.github.io"}
+
+    return (json_response, 200, headers)
 
 
 @functions_framework.http
@@ -79,9 +98,11 @@ def http_accel_graph(request: flask.Request) -> str:
             try:
                 accel_params[arg_key] = float(request_args[arg_key])
             except ValueError:
-                return f"All input parameters must be able to be read as a number. <br><br>{EXAMPLE_SPEED_URL}"
+                example_url = request.base_url + 'accel-graph/' + EXAMPLE_SPEED_ARGS
+                return f"All input parameters must be able to be read as a number. <br><br><a href='{example_url}'>{example_url}</a>"
         else:
-            return f"You need to include all parameters to get a result!<br>{EXAMPLE_SPEED_URL}"
+            example_url = request.base_url + 'accel-graph/' + EXAMPLE_SPEED_ARGS
+            return f"All input parameters must be able to be read as a number. <br><br><a href='{example_url}'>{example_url}</a>"
 
     graph = tp_spd_sim.accel_graph(accel_params)
 

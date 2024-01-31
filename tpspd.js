@@ -42,7 +42,7 @@ function plotly_graph() {
   var cda_m2 = inp_cda.value,
     pwr_kw = inp_power.value,
     mass_kg = 200,
-    // api_host = "http://localhost:8123",   // Testing
+//     api_host = "http://localhost:8123",   // Testing
     api_host = "https://us-central1-axial-camp-412420.cloudfunctions.net",  // Production
     data_url = `${api_host}/accel-sol?power_kw=${pwr_kw}&mass_kg=${mass_kg}&cda_m2=${cda_m2}`;
   // TODO: Don't hardcode URL, and use authentication
@@ -53,12 +53,23 @@ function plotly_graph() {
       console.log(json)
       var speed_trace = {
         x: json["time_s"],
-        y: json["velocity_ms"],
+        y: json["velocity_ms"]*ms2kmh,
         mode: 'lines+markers',
         type: 'scatter'
       };
 
-      var data = [speed_trace];
+      var data = [speed_trace],
+        layout = {
+          title: {
+            text: "Acceleration Plot"
+          },
+          xaxis: {
+            text: "Time [s]"
+          },
+          yaxis: {
+            text: "Speed [km/h]"
+          }
+        };
 
       Plotly.newPlot('tpspd_plot', data);
     })
