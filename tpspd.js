@@ -4,8 +4,17 @@ const RHO = 1.3,    // Air Density
   ms2kmh = 3.6,
   speed_decimal_places = 2;
 
+var API_HOST;
+if (window.location.origin == "http://localhost:8000") {
+  API_HOST = "http://localhost:8123"   // Testing
+} else {
+  API_HOST = "https://us-central1-axial-camp-412420.cloudfunctions.net" // Production
+}
+console.log(API_HOST)
+
 var inp_power = document.querySelector("#tpspd_power"),
   inp_cda = document.querySelector("#tpspd_cda"),
+  inp_mass = document.querySelector("#tpspd_mass"),
   inp_tpspd = document.querySelector("#tpspd_topspeed"),
   out_plot = document.querySelector("#tpspd_plot");
 
@@ -14,6 +23,10 @@ inp_power.addEventListener("input", e => {
 })
 
 inp_cda.addEventListener("input", e => {
+  inp_update();
+})
+
+inp_mass.addEventListener("input", e => {
   inp_update();
 })
 
@@ -41,10 +54,8 @@ function calc_topspeed(cda, power) {
 function plotly_graph() {
   var cda_m2 = inp_cda.value,
     pwr_kw = inp_power.value,
-    mass_kg = 200,
-//     api_host = "http://localhost:8123",   // Testing
-    api_host = "https://us-central1-axial-camp-412420.cloudfunctions.net",  // Production
-    data_url = `${api_host}/accel-sol?power_kw=${pwr_kw}&mass_kg=${mass_kg}&cda_m2=${cda_m2}`;
+    mass_kg = inp_mass.value,
+    data_url = `${API_HOST}/accel-sol?power_kw=${pwr_kw}&mass_kg=${mass_kg}&cda_m2=${cda_m2}`;
   // TODO: Don't hardcode URL, and use authentication
 
   fetch(data_url)
